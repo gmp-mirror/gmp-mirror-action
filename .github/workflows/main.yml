@@ -25,44 +25,43 @@ jobs:
           daemon: true
           config: |
             HTTPTunnelPort 9080
-      - uses: actions/cache@v3
-        with:
-          path: last-hg-tip-id
-          key: ${{ github.job }}-last-hg-tip-id
 
-      - name: check whether to do full clone (once a week, or if the tip revision ID changed)
-        id: full-clone-check
+      - name: Retrieve the tip revision ID
+        id: retrieve-tip-id
         run: |
-          hg id -r tip $src_hg_repo > latest-hg-tip-id
-          echo "Latest tip id: `cat latest-hg-tip-id`"
-          if [ -f last-hg-tip-id ]; then
-            echo "Last clone tip id: `cat last-hg-tip-id`"
-            if date +"%u" | grep -q 7; then
-              # Always run a full clone on Sundays
-              echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
-              echo "RUN=true" >> "$GITHUB_OUTPUT"
-              mv latest-hg-tip-id last-hg-tip-id
-              exit 0
-            fi
-            if cmp -s latest-hg-tip-id last-hg-tip-id; then
-              # tip ID has not changed, don't run
-              echo "Tip revision ID has not changed, skipping full clone"
-              echo "RUN=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
+          echo "id=`hg id -r tip $src_hg_repo`" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache/restore@v3
+        id: check-cache
+        with:
+          path: /proc/version # contents of file are not used
+          key: ${{ github.job }}-last-hg-tip-id-${{ steps.retrieve-tip-id.outputs.id }}
+          lookup-only: true
+
+      - name: Check day of week
+        id: day-of-week
+        run: |
+          if date +"%u" | grep -q 7; then
+            # Always run a full clone on Sundays
+            echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
+            echo "force-run=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "Tip id has changed since last clone, running full clone"
-          echo "RUN=true" >> "$GITHUB_OUTPUT"
-          mv latest-hg-tip-id last-hg-tip-id
 
       - name: mirror https://gmplib.org/repo/gmp to https://github.com/gmp-mirror/gmp
-        if: ${{ steps.full-clone-check.outputs.RUN == 'true' }}
+        id: mirror
+        if: steps.check-cache.outputs.cache-hit != 'true' || steps.day-of-week.outputs.force-run == 'true'
         uses: 'mozillazg/mirror-hg-repo@v2'
         with:
           source-hg-repo-url: '${{ env.src_hg_repo }}'
           destination-git-repo-owner: 'gmp-mirror'
           destination-git-repo-name: 'gmp'
           destination-git-personal-token: '${{ secrets.PERSONAL_GIT_TOKEN }}'
+
+      - uses: actions/cache/save@v3
+        if: steps.mirror.outcome == 'success'
+        with:
+          path: /proc/version # contents of file are not used
+          key: ${{ github.job }}-last-hg-tip-id-${{ steps.retrieve-tip-id.outputs.id }}
 
   mirror-gmp-6_3:
     runs-on: ubuntu-latest
@@ -83,44 +82,43 @@ jobs:
           daemon: true
           config: |
             HTTPTunnelPort 9080
-      - uses: actions/cache@v3
-        with:
-          path: last-hg-tip-id
-          key: ${{ github.job }}-last-hg-tip-id
 
-      - name: check whether to do full clone (once a week, or if the tip revision ID changed)
-        id: full-clone-check
+      - name: Retrieve the tip revision ID
+        id: retrieve-tip-id
         run: |
-          hg id -r tip $src_hg_repo > latest-hg-tip-id
-          echo "Latest tip id: `cat latest-hg-tip-id`"
-          if [ -f last-hg-tip-id ]; then
-            echo "Last clone tip id: `cat last-hg-tip-id`"
-            if date +"%u" | grep -q 7; then
-              # Always run a full clone on Sundays
-              echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
-              echo "RUN=true" >> "$GITHUB_OUTPUT"
-              mv latest-hg-tip-id last-hg-tip-id
-              exit 0
-            fi
-            if cmp -s latest-hg-tip-id last-hg-tip-id; then
-              # tip ID has not changed, don't run
-              echo "Tip revision ID has not changed, skipping full clone"
-              echo "RUN=false" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
+          echo "id=`hg id -r tip $src_hg_repo`" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/cache/restore@v3
+        id: check-cache
+        with:
+          path: /proc/version # contents of file are not used
+          key: ${{ github.job }}-last-hg-tip-id-${{ steps.retrieve-tip-id.outputs.id }}
+          lookup-only: true
+
+      - name: Check day of week
+        id: day-of-week
+        run: |
+          if date +"%u" | grep -q 7; then
+            # Always run a full clone on Sundays
+            echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
+            echo "force-run=true" >> "$GITHUB_OUTPUT"
           fi
-          echo "Tip id has changed since last clone, running full clone"
-          echo "RUN=true" >> "$GITHUB_OUTPUT"
-          mv latest-hg-tip-id last-hg-tip-id
 
       - name: mirror https://gmplib.org/repo/gmp-6.3 to https://github.com/gmp-mirror/gmp-6.3
-        if: ${{ steps.full-clone-check.outputs.RUN == 'true' }}
+        id: mirror
+        if: steps.check-cache.outputs.cache-hit != 'true' || steps.day-of-week.outputs.force-run == 'true'
         uses: 'mozillazg/mirror-hg-repo@v2'
         with:
           source-hg-repo-url: '${{ env.src_hg_repo }}'
           destination-git-repo-owner: 'gmp-mirror'
           destination-git-repo-name: 'gmp-6.3'
           destination-git-personal-token: '${{ secrets.PERSONAL_GIT_TOKEN }}'
+
+      - uses: actions/cache/save@v3
+        if: steps.mirror.outcome == 'success'
+        with:
+          path: /proc/version # contents of file are not used
+          key: ${{ github.job }}-last-hg-tip-id-${{ steps.retrieve-tip-id.outputs.id }}
 
   # GMP 6.2: disabled, no changes since 2021.
   mirror-gmp-6_2:
