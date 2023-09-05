@@ -34,7 +34,9 @@ jobs:
         id: full-clone-check
         run: |
           hg id -r tip $src_hg_repo > latest-hg-tip-id
+          echo "Latest tip id: `cat latest-hg-tip-id`"
           if [ -f last-hg-tip-id ]; then
+            echo "Last clone tip id: `cat last-hg-tip-id`"
             if date +"%u" | grep -q 7; then
               # Always run a full clone on Sundays
               echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
@@ -49,6 +51,7 @@ jobs:
               exit 0
             fi
           fi
+          echo "Tip id has changed since last clone, running full clone"
           echo "RUN=true" >> "$GITHUB_OUTPUT"
           mv latest-hg-tip-id last-hg-tip-id
 
@@ -89,7 +92,9 @@ jobs:
         id: full-clone-check
         run: |
           hg id -r tip $src_hg_repo > latest-hg-tip-id
+          echo "Latest tip id: `cat latest-hg-tip-id`"
           if [ -f last-hg-tip-id ]; then
+            echo "Last clone tip id: `cat last-hg-tip-id`"
             if date +"%u" | grep -q 7; then
               # Always run a full clone on Sundays
               echo "Running weekly full clone (to pick up possible branch/tag changes that happened without a default branch commit)"
@@ -104,6 +109,7 @@ jobs:
               exit 0
             fi
           fi
+          echo "Tip id has changed since last clone, running full clone"
           echo "RUN=true" >> "$GITHUB_OUTPUT"
           mv latest-hg-tip-id last-hg-tip-id
 
