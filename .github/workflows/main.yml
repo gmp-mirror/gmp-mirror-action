@@ -29,7 +29,8 @@ jobs:
       - name: Retrieve the tip revision ID
         id: retrieve-tip-id
         run: |
-          echo "id=`hg id -r tip $src_hg_repo`" >> "$GITHUB_OUTPUT"
+          id=`hg id -r tip $src_hg_repo`
+          echo "id=$id" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache/restore@v3
         id: check-cache
@@ -86,7 +87,8 @@ jobs:
       - name: Retrieve the tip revision ID
         id: retrieve-tip-id
         run: |
-          echo "id=`hg id -r tip $src_hg_repo`" >> "$GITHUB_OUTPUT"
+          id=`hg id -r tip $src_hg_repo`
+          echo "id=$id" >> "$GITHUB_OUTPUT"
 
       - uses: actions/cache/restore@v3
         id: check-cache
