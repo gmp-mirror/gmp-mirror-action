@@ -35,7 +35,7 @@ jobs:
           id=`hg id -r tip $src_hg_repo`
           echo "id=$id" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/cache/restore@v3
+      - uses: actions/cache/restore@v4
         id: check-cache
         with:
           path: /proc/version # contents of file are not used
@@ -61,7 +61,7 @@ jobs:
           destination-git-repo-name: 'gmp'
           destination-git-personal-token: '${{ secrets.PERSONAL_GIT_TOKEN }}'
 
-      - uses: actions/cache/save@v3
+      - uses: actions/cache/save@v4
         if: steps.mirror.outcome == 'success'
         with:
           path: /proc/version # contents of file are not used
@@ -95,7 +95,7 @@ jobs:
           id=`hg id -r tip $src_hg_repo`
           echo "id=$id" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/cache/restore@v3
+      - uses: actions/cache/restore@v4
         id: check-cache
         with:
           path: /proc/version # contents of file are not used
@@ -121,7 +121,7 @@ jobs:
           destination-git-repo-name: 'gmp-6.3'
           destination-git-personal-token: '${{ secrets.PERSONAL_GIT_TOKEN }}'
 
-      - uses: actions/cache/save@v3
+      - uses: actions/cache/save@v4
         if: steps.mirror.outcome == 'success'
         with:
           path: /proc/version # contents of file are not used
