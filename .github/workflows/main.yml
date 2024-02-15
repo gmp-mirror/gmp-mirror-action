@@ -54,7 +54,7 @@ jobs:
       - name: mirror https://gmplib.org/repo/gmp to https://github.com/gmp-mirror/gmp
         id: mirror
         if: steps.check-cache.outputs.cache-hit != 'true' || steps.day-of-week.outputs.force-run == 'true'
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'gmp-mirror/mirror-hg-repo@master'
         with:
           source-hg-repo-url: '${{ env.src_hg_repo }}'
           destination-git-repo-owner: 'gmp-mirror'
