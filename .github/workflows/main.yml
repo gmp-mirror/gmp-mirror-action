@@ -59,7 +59,7 @@ jobs:
       - name: mirror https://gmplib.org/repo/gmp to https://github.com/gmp-mirror/gmp
         id: mirror
         if: steps.check-cache.outputs.cache-hit != 'true' || steps.day-of-week.outputs.force-run == 'true'
-        uses: 'gmp-mirror/mirror-hg-repo@master'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: '${{ env.src_hg_repo }}'
           destination-git-repo-owner: 'gmp-mirror'
@@ -117,7 +117,7 @@ jobs:
       - name: mirror https://gmplib.org/repo/gmp-6.3 to https://github.com/gmp-mirror/gmp-6.3
         id: mirror
         if: steps.check-cache.outputs.cache-hit != 'true' || steps.day-of-week.outputs.force-run == 'true'
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: '${{ env.src_hg_repo }}'
           destination-git-repo-owner: 'gmp-mirror'
@@ -151,7 +151,7 @@ jobs:
             HTTPTunnelPort 9080
 
       - name: mirror https://gmplib.org/repo/gmp-6.2 to https://github.com/gmp-mirror/gmp-6.2
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: 'https://gmplib.org/repo/gmp-6.2'
           destination-git-repo-owner: 'gmp-mirror'
@@ -179,7 +179,7 @@ jobs:
             HTTPTunnelPort 9080
 
       - name: mirror https://gmplib.org/repo/gmp-6.1 to https://github.com/gmp-mirror/gmp-6.1
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: 'https://gmplib.org/repo/gmp-6.1'
           destination-git-repo-owner: 'gmp-mirror'
@@ -207,7 +207,7 @@ jobs:
             HTTPTunnelPort 9080
 
       - name: mirror https://gmplib.org/repo/gmp-6.0 to https://github.com/gmp-mirror/gmp-6.0
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: 'https://gmplib.org/repo/gmp-6.0'
           destination-git-repo-owner: 'gmp-mirror'
@@ -235,7 +235,7 @@ jobs:
             HTTPTunnelPort 9080
 
       - name: mirror https://gmplib.org/repo/gmp-5.1 to https://github.com/gmp-mirror/gmp-5.1
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: 'https://gmplib.org/repo/gmp-5.1'
           destination-git-repo-owner: 'gmp-mirror'
@@ -263,7 +263,7 @@ jobs:
             HTTPTunnelPort 9080
 
       - name: mirror https://gmplib.org/repo/gmp-5.0 to https://github.com/gmp-mirror/gmp-5.0
-        uses: 'mozillazg/mirror-hg-repo@v2'
+        uses: 'mozillazg/mirror-hg-repo@v2.1.0'
         with:
           source-hg-repo-url: 'https://gmplib.org/repo/gmp-5.0'
           destination-git-repo-owner: 'gmp-mirror'
